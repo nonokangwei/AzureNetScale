@@ -37,7 +37,7 @@
             "copy": {
                 "name": "storagecopy",
                 "count": "[parameters('LoopNum')]"
-            }
+            },
             "dependsOn": []
         }
     ]
