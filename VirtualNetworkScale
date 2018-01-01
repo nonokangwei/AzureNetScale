@@ -1,0 +1,37 @@
+{
+    "$schema": "https://schema.management.azure.com/schemas/2015-01-01/deploymentTemplate.json#",
+    "contentVersion": "1.0.0.0",
+    "parameters": {
+        "virtualNetworks_vnet1_name": {
+            "defaultValue": "vnet1",
+            "type": "String"
+        }
+    },
+    "variables": {},
+    "resources": [
+        {
+            "comments": "已从资源实现通用:“/subscriptions/0f53c77e-a06b-4d80-8974-9d5fe127c280/resourceGroups/NetworkScale/providers/Microsoft.Network/virtualNetworks/vnet1”。",
+            "type": "Microsoft.Network/virtualNetworks",
+            "name": "[parameters('virtualNetworks_vnet1_name')]",
+            "apiVersion": "2016-03-30",
+            "location": "chinanorth",
+            "scale": null,
+            "properties": {
+                "addressSpace": {
+                    "addressPrefixes": [
+                        "172.0.0.0/16"
+                    ]
+                },
+                "subnets": [
+                    {
+                        "name": "subnet1",
+                        "properties": {
+                            "addressPrefix": "172.0.0.0/24"
+                        }
+                    }
+                ]
+            },
+            "dependsOn": []
+        }
+    ]
+}
