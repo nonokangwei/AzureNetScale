@@ -5,6 +5,9 @@
         "virtualNetworks_name": {
             "defaultValue": "vnet",
             "type": "String"
+        },
+        "LoopNum": {
+            "type": "int"
         }
     },
     "variables": {},
@@ -12,7 +15,7 @@
         {
             "comments": "已从资源实现通用:“/subscriptions/0f53c77e-a06b-4d80-8974-9d5fe127c280/resourceGroups/NetworkScale/providers/Microsoft.Network/virtualNetworks/vnet1”。",
             "type": "Microsoft.Network/virtualNetworks",
-            "name": "[parameters('virtualNetworks_name')]",
+            "name": "[concat(parameters('virtualNetworks_name'),copyIndex(1))]",
             "apiVersion": "2016-03-30",
             "location": "chinanorth",
             "scale": null,
@@ -31,6 +34,10 @@
                     }
                 ]
             },
+            "copy": {
+                "name": "storagecopy",
+                "count": "[parameters('LoopNum')]"
+            }
             "dependsOn": []
         }
     ]
