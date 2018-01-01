@@ -3,7 +3,7 @@
     "contentVersion": "1.0.0.0",
     "parameters": {
         "virtualNetworks_name": {
-            "defaultValue": "vnet",
+            "defaultValue": "vnetscale",
             "type": "String"
         },
         "intloop": {
@@ -32,12 +32,12 @@
                 },
                 "copy": [
                     {
-                        "name": "subnets",
+                        "name": "intloop",
                         "count": "[parameters('intloop')]",
                         "input": {
-                            "name": "[concat('subnet-', copyIndex('subnets'))]",
+                            "name": "[concat('subnet-', add(mul(copyIndex('extloop'),250),copyIndex('intloop',1)))]",
                             "properties": {
-                            "addressPrefix": "[concat(variables('subnetAddressPrefix'),copyIndex('extloop'),'.',copyIndex('inloop'),'.0/24')]"
+                            "addressPrefix": "[concat(variables('subnetAddressPrefix'),copyIndex('extloop'),'.',copyIndex('intloop'),'.0/24')]"
                             }
                         }
                     }
