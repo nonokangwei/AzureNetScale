@@ -1,63 +1,47 @@
+
 {
-    "apiVersion": "2015-01-01",
-    "type": "Microsoft.Resources/deployments",
-    "name": "updateVNet",
-    "dependsOn": [],
-    "properties": {
-        "mode": "Incremental",
-        "parameters": {}
-        "template": {
-            "$schema": "https://schema.management.azure.com/schemas/2015-01-01/deploymentTemplate.json#",
-            "contentVersion": "1.0.0.0",
-            "parameters": {
-                "virtualNetworks_name": {
-                    "defaultValue": "vnetscale",
-                    "type": "String"
-                },
-                "intloop": {
-                    "type": "int"
-                },
-                "extloop": {
-                    "type": "int"
-                }
-            },
-            "variables": {
-                "subnetAddressPrefix" : "172." 
-            },
-            "resources": [
-                {
-                    "comments": "已从资源实现通用:“/subscriptions/0f53c77e-a06b-4d80-8974-9d5fe127c280/resourceGroups/NetworkScale/providers/Microsoft.Network/virtualNetworks/vnet1”。",
-                    "type": "Microsoft.Network/virtualNetworks",
-                    "name": "[parameters('virtualNetworks_name')]",
-                    "apiVersion": "2016-03-30",
-                    "location": "chinanorth",
-                    "scale": null,
-                    "properties": {
-                        "addressSpace": {
-                            "addressPrefixes": [
-                                "172.0.0.0/8"
-                            ]
-                        },
-                        "copy": [
-                            {
-                                "name": "subnets",
-                                "count": "[parameters('intloop')]",
-                                "input": {
-                                    "name": "[concat('subnet-', add(mul(copyIndex('extloop'),250),copyIndex('subnets',1)))]",
-                                    "properties": {
-                                        "addressPrefix": "[concat(variables('subnetAddressPrefix'),copyIndex('extloop'),'.',copyIndex('subnets'),'.0/24')]"
-                                    }
-                                }
-                            }
-                        ]
-                    },
-                    "copy": {
-                        "name": "extloop",
-                        "count": "[parameters('extloop')]"
-                    },
-                    "dependsOn": []
-                }
-            ]
+    "$schema": "https://schema.management.azure.com/schemas/2015-01-01/deploymentTemplate.json#",
+    "contentVersion": "1.0.0.0",
+    "parameters": {
+        "virtualNetworks_name": {
+            "defaultValue": "vnetscale",
+            "type": "String"
+        },
+        "intloop": {
+            "type": "int"
         }
-    }
+    },
+    "variables": {
+        "subnetAddressPrefix" : "172." 
+    },
+    "resources": [
+        {
+            "comments": "已从资源实现通用:“/subscriptions/0f53c77e-a06b-4d80-8974-9d5fe127c280/resourceGroups/NetworkScale/providers/Microsoft.Network/virtualNetworks/vnet1”。",
+            "type": "Microsoft.Network/virtualNetworks",
+            "name": "[parameters('virtualNetworks_name')]",
+            "apiVersion": "2016-03-30",
+            "location": "chinanorth",
+            "scale": null,
+            "properties": {
+                "addressSpace": {
+                    "addressPrefixes": [
+                        "172.0.0.0/8"
+                    ]
+                },
+                "copy": [
+                    {
+                        "name": "subnets",
+                        "count": "[parameters('intloop')]",
+                        "input": {
+                            "name": "[concat('subnet-', copyIndex('subnets',1))]",
+                            "properties": {
+                                "addressPrefix": "[concat(variables('subnetAddressPrefix'),div(copyIndex('subnets',1),250),'.',mod(copyIndex('subnets',1),250),'.0/24')]"
+                            }
+                        }
+                    }
+                ]
+            },
+            "dependsOn": []
+        }
+    ]
 }
