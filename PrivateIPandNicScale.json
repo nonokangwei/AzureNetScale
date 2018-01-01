@@ -1,0 +1,43 @@
+{
+  "$schema": "https://schema.management.azure.com/schemas/2015-01-01/deploymentTemplate.json#",
+  "contentVersion": "1.0.0.0",
+  "parameters": {
+      "NicNumber": {
+          "type": "int"
+      }
+  },
+  "variables": {
+      "nicName": "Nic-"
+  },
+  "resources": [
+    {
+      "type": "Microsoft.Network/networkInterfaces",
+      "name": "[concat(variables('nicName'),copyIndex('nicnum',1))]",
+      "apiVersion": "2016-03-30",
+      "location": "[resourceGroup().location]",
+      "dependsOn": [
+      ],
+      "properties": {
+        "copy":[{
+            "name": "ipConfigurations",
+            "count": 256,
+            "input":{
+                "name": "[concat('IPConfig-',copyIndex('ipConfigurations',1))]",
+                "properties": {
+                    "primary": "[less(copyIndex('ipConfigurations'),1)]",
+                    "privateIPAllocationMethod": "Dynamic",
+                    "subnet": {
+                        "id": "[concat(resourceId('Microsoft.Network/virtualNetworks', 'privatescalevnet'), '/subnets/default')]"
+                    }
+                }
+            }
+        }]
+      },
+      "copy": {
+          "name": "nicnum",
+          "count": "[parameters('NicNumber')]"
+      }
+    }
+  ],
+  "outputs": {}
+}
