@@ -1,0 +1,50 @@
+{
+    "$schema": "https://schema.management.azure.com/schemas/2015-01-01/deploymentTemplate.json#",
+    "contentVersion": "1.0.0.0",
+    "parameters": {
+        "networkInterfaces_Nic_name": {
+            "defaultValue": "Nic-",
+            "type": "String"
+        },
+        "nicloop": {
+            "type": "int"
+        },
+        "networkInterfaces_Nic_id": {
+            "defaultValue": "/subscriptions/0f53c77e-a06b-4d80-8974-9d5fe127c280/resourceGroups/NetworkScale/providers/Microsoft.Network/virtualNetworks/privatescalevnet/subnets/default",
+            "type": "String"
+        }
+    },
+    "variables": {},
+    "resources": [
+        {
+            "comments": "已从资源实现通用:“/subscriptions/0f53c77e-a06b-4d80-8974-9d5fe127c280/resourceGroups/nicscale/providers/Microsoft.Network/networkInterfaces/Nic-1”。",
+            "type": "Microsoft.Network/networkInterfaces",
+            "name": "[concat(parameters('networkInterfaces_Nic_name'),copyIndex('nicloop',2))]",
+            "apiVersion": "2016-03-30",
+            "location": "chinanorth",
+            "scale": null,
+            "properties": {
+                "ipConfigurations": [
+                    {
+                        "name": "ipconfig1",
+                        "properties": {
+                            "privateIPAllocationMethod": "Dynamic",
+                            "subnet": {
+                                "id": "[parameters('networkInterfaces_Nic_id')]"
+                            }
+                        }
+                    }
+                ],
+                "dnsSettings": {
+                    "dnsServers": []
+                },
+                "enableIPForwarding": false
+            },
+            "copy": {
+                "name": "nicloop",
+                "count": "[parameters('nicloop')]"
+            },
+            "dependsOn": []
+        }
+    ]
+}
