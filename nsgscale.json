@@ -1,0 +1,32 @@
+{
+    "$schema": "https://schema.management.azure.com/schemas/2015-01-01/deploymentTemplate.json#",
+    "contentVersion": "1.0.0.0",
+    "parameters": {
+        "networkSecurityGroups_nsg_name": {
+            "defaultValue": "nsg",
+            "type": "String"
+        },
+        "nsgloop": {
+            "type": "int"
+        }
+    },
+    "variables": {},
+    "resources": [
+        {
+            "comments": "已从资源实现通用:“/subscriptions/0f53c77e-a06b-4d80-8974-9d5fe127c280/resourceGroups/nsgscale/providers/Microsoft.Network/networkSecurityGroups/nsg1”。",
+            "type": "Microsoft.Network/networkSecurityGroups",
+            "name": "[concat(parameters('networkSecurityGroups_nsg_name'),copyIndex('nsgloop',1))]",
+            "apiVersion": "2016-03-30",
+            "location": "chinanorth",
+            "scale": null,
+            "properties": {
+                "securityRules": []
+            },
+            "copy": {
+                "name": "nsgloop",
+                "count": "[parameters('nsgloop')]"
+            },
+            "dependsOn": []
+        }
+    ]
+}
