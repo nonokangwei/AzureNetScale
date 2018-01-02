@@ -1,0 +1,41 @@
+{
+    "$schema": "https://schema.management.azure.com/schemas/2015-01-01/deploymentTemplate.json#",
+    "contentVersion": "1.0.0.0",
+    "parameters": {
+        "networkSecurityGroups_nsg_name": {
+            "defaultValue": "nsg",
+            "type": "String"
+        }
+    },
+    "variables": {},
+    "resources": [
+        {
+            "comments": "已从资源实现通用:“/subscriptions/0f53c77e-a06b-4d80-8974-9d5fe127c280/resourceGroups/nsgscale/providers/Microsoft.Network/networkSecurityGroups/nsg1”。",
+            "type": "Microsoft.Network/networkSecurityGroups",
+            "name": "[parameters('networkSecurityGroups_nsg_name')]",
+            "apiVersion": "2016-03-30",
+            "location": "chinanorth",
+            "scale": null,
+            "properties": {
+                "copy":[{
+                    "name": "securityRules",
+                    "count": 200,
+                    "input": {
+                        "name": "[concat('rule',copyIndex('securityRules',1))]",
+                        "properties": {
+                            "protocol": "TCP",
+                            "sourcePortRange": "*",
+                            "destinationPortRange": "8080",
+                            "sourceAddressPrefix": "[concat('172.0.0.',copyIndex('securityRules',1),'/32')]",
+                            "destinationAddressPrefix": "*",
+                            "access": "Allow",
+                            "priority": add(100,copyIndex('securityRules',1)),
+                            "direction": "Inbound"
+                        }
+                    }
+                ]}
+            },
+            "dependsOn": []
+        }
+    ]
+}
