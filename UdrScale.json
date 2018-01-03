@@ -1,0 +1,31 @@
+{
+    "$schema": "https://schema.management.azure.com/schemas/2015-01-01/deploymentTemplate.json#",
+    "contentVersion": "1.0.0.0",
+    "parameters": {
+        "routeTables_udr_name": {
+            "defaultValue": "udr",
+            "type": "String"
+        },
+        "udrloop": {
+            "type": "int"
+        }
+    },
+    "variables": {},
+    "resources": [
+        {
+            "type": "Microsoft.Network/routeTables",
+            "name": "[concat(parameters('routeTables_udr_name'),copyIndex('udrloop',1))]",
+            "apiVersion": "2016-03-30",
+            "location": "chinanorth",
+            "scale": null,
+            "properties": {
+                "routes": []
+            },
+            "copy": {
+                "name": "udrloop",
+                "count": "[parameters('udrloop')]"
+            },
+            "dependsOn": []
+        }
+    ]
+}
