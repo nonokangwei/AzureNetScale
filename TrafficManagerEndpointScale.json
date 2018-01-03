@@ -35,7 +35,7 @@
                 },
                 "copy":[{    
                     "name": "endpoints",
-                    "count":  "[parameters('endpoints')]",
+                    "count":  "[parameters('endpointloop')]",
                     "input": {
                         "name": "[concat('endpoint',copyIndex('endpoints',1))]",
                         "type": "Microsoft.Network/trafficManagerProfiles/externalEndpoints",
@@ -43,7 +43,7 @@
                             "endpointStatus": "Enabled",
                             "target": "[concat('endpoint',copyIndex('endpoints',1),'.test.com')]",
                             "weight": 1,
-                            "priority": "[copyIndex('endpointloop',1)]",
+                            "priority": "[copyIndex('endpoints',1)]",
                             "endpointLocation": null
                         }
                     }
