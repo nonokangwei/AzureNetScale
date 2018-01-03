@@ -1,0 +1,38 @@
+{
+    "$schema": "https://schema.management.azure.com/schemas/2015-01-01/deploymentTemplate.json#",
+    "contentVersion": "1.0.0.0",
+    "parameters": {
+        "routeTables_udr_name": {
+            "defaultValue": "udr1",
+            "type": "String"
+        },
+        "ruleloop": {
+            "type": "int"
+        }
+    },
+    "variables": {},
+    "resources": [
+        {
+            "type": "Microsoft.Network/routeTables",
+            "name": "[parameters('routeTables_udr_name')]",
+            "apiVersion": "2016-03-30",
+            "location": "chinanorth",
+            "scale": null,
+            "properties": {
+                "copy":[{
+                    "name": "routes",
+                    "count": "[parameters('ruleloop')]",
+                    "input": {
+                        "name": "[concat('rule1',copyIndex('routes',1))]",
+                        "properties": {
+                            "addressPrefix": "[concat('172.0.0.',copyIndex('routes'),'/32')]",
+                            "nextHopType": "VirtualAppliance",
+                            "nextHopIpAddress": "1.1.1.1"
+                        }
+                    }
+                }]
+            },
+            "dependsOn": []
+        }
+    ]
+}
