@@ -41,7 +41,7 @@
                         "type": "Microsoft.Network/trafficManagerProfiles/externalEndpoints",
                         "properties": {
                             "endpointStatus": "Enabled",
-                            "target": "[concat('endpoint',copyIndex('endpoints',1),'test.com')]",
+                            "target": "[concat('endpoint',copyIndex('endpoints',1),'.test.com')]",
                             "weight": 1,
                             "priority": "[copyIndex('endpointloop',1)]",
                             "endpointLocation": null
