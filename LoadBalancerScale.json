@@ -1,0 +1,52 @@
+{
+    "$schema": "https://schema.management.azure.com/schemas/2015-01-01/deploymentTemplate.json#",
+    "contentVersion": "1.0.0.0",
+    "parameters": {
+        "loadBalancers_lb_name": {
+            "defaultValue": "lb1",
+            "type": "String"
+        },
+        "virtualNetworks_lbscale_name": {
+            "defaultValue": "lbscale",
+            "type": "String"
+        },
+        "lbloop": {
+            "type": "int"
+        }
+    },
+    "variables": {},
+    "resources": [
+        {
+            "comments": "已从资源实现通用:“/subscriptions/0f53c77e-a06b-4d80-8974-9d5fe127c280/resourceGroups/lbscale/providers/Microsoft.Network/loadBalancers/lb1”。",
+            "type": "Microsoft.Network/loadBalancers",
+            "name": "[concat(parameters('loadBalancers_lb_name'),copyIndex('lbloop',1))]",
+            "apiVersion": "2016-03-30",
+            "location": "chinanorth",
+            "scale": null,
+            "properties": {
+                "frontendIPConfigurations": [
+                    {
+                        "name": "LoadBalancerFrontEnd",
+                        "properties": {
+                            "privateIPAllocationMethod": "Dynamic",
+                            "subnet": {
+                                "id": "[concat(resourceId('Microsoft.Network/virtualNetworks', parameters('virtualNetworks_lbscale_name')), '/subnets/lbvnet')]"
+                            }
+                        }
+                    }
+                ],
+                "backendAddressPools": [],
+                "loadBalancingRules": [],
+                "probes": [],
+                "inboundNatRules": [],
+                "outboundNatRules": [],
+                "inboundNatPools": []
+            },
+            "copy": {
+                "name": "lbloop",
+                "count": "[parameters('lbloop')]"
+            },
+            "dependsOn": []
+        }
+    ]
+}
