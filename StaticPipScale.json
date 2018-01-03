@@ -1,0 +1,32 @@
+{
+    "$schema": "https://schema.management.azure.com/schemas/2015-01-01/deploymentTemplate.json#",
+    "contentVersion": "1.0.0.0",
+    "parameters": {
+        "publicIPAddresses_publicip_name": {
+            "defaultValue": "publicip",
+            "type": "String"
+        },
+        "staticpiploop": {
+            "type": "int"
+        }
+    },
+    "variables": {},
+    "resources": [
+        {
+            "type": "Microsoft.Network/publicIPAddresses",
+            "name": "[concat(parameters('publicIPAddresses_publicip_name'),copyIndex('staticpiploop',1))]",
+            "apiVersion": "2016-03-30",
+            "location": "chinaeast",
+            "scale": null,
+            "properties": {
+                "publicIPAllocationMethod": "Static",
+                "idleTimeoutInMinutes": 4
+            },
+            "copy": {
+                "name": "staticpiploop",
+                "count": "[parameters('staticpiploop')]"
+            },
+            "dependsOn": []
+        }
+    ]
+}
