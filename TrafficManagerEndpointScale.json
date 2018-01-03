@@ -1,0 +1,55 @@
+{
+    "$schema": "https://schema.management.azure.com/schemas/2015-01-01/deploymentTemplate.json#",
+    "contentVersion": "1.0.0.0",
+    "parameters": {
+        "trafficManagerProfiles_endpointscale_name": {
+            "defaultValue": "endpointscale",
+            "type": "String"
+        },
+        "endpointloop": {
+            "type": "int"
+        }
+    },
+    "variables": {},
+    "resources": [
+        {
+            "comments": "已从资源实现通用:“/subscriptions/0f53c77e-a06b-4d80-8974-9d5fe127c280/resourceGroups/endpointscale/providers/Microsoft.Network/trafficManagerProfiles/endpointscale”。",
+            "type": "Microsoft.Network/trafficManagerProfiles",
+            "name": "[parameters('trafficManagerProfiles_endpointscale_name')]",
+            "apiVersion": "2017-03-01",
+            "location": "global",
+            "tags": {},
+            "scale": null,
+            "properties": {
+                "profileStatus": "Enabled",
+                "trafficRoutingMethod": "Priority",
+                "dnsConfig": {
+                    "relativeName": "[parameters('trafficManagerProfiles_endpointscale_name')]",
+                    "fqdn": "[concat(parameters('trafficManagerProfiles_endpointscale_name'),'.trafficmanager.cn')]",
+                    "ttl": 300
+                },
+                "monitorConfig": {
+                    "protocol": "HTTP",
+                    "port": 80,
+                    "path": "/"
+                },
+                "copy":[{    
+                    "name": "endpoints",
+                    "count":  "[parameters('endpoints')]",
+                    "input": {
+                        "name": "[concat('endpoint',copyIndex('endpoints',1))]",
+                        "type": "Microsoft.Network/trafficManagerProfiles/externalEndpoints",
+                        "properties": {
+                            "endpointStatus": "Enabled",
+                            "target": "[concat('endpoint',copyIndex('endpoints',1),'test.com')]",
+                            "weight": 1,
+                            "priority": "[copyIndex('endpointloop',1)]",
+                            "endpointLocation": null
+                        }
+                    }
+                }]
+            },
+            "dependsOn": []
+        }
+    ]
+}
