@@ -1,0 +1,45 @@
+{
+    "$schema": "https://schema.management.azure.com/schemas/2015-01-01/deploymentTemplate.json#",
+    "contentVersion": "1.0.0.0",
+    "parameters": {
+        "trafficManagerProfiles_profile_name": {
+            "defaultValue": "profile",
+            "type": "String"
+        },
+        "tmloop": {
+            "type": "int"
+        }
+    },
+    "variables": {},
+    "resources": [
+        {
+            "comments": "已从资源实现通用:“/subscriptions/0f53c77e-a06b-4d80-8974-9d5fe127c280/resourceGroups/trafficmanager/providers/Microsoft.Network/trafficManagerProfiles/profile1”。",
+            "type": "Microsoft.Network/trafficManagerProfiles",
+            "name": "[concat(parameters('trafficManagerProfiles_profile_name'),copyIndex('tmloop',1))]",
+            "apiVersion": "2017-03-01",
+            "location": "global",
+            "tags": {},
+            "scale": null,
+            "properties": {
+                "profileStatus": "Enabled",
+                "trafficRoutingMethod": "Priority",
+                "dnsConfig": {
+                    "relativeName": "[concat(parameters('trafficManagerProfiles_profile_name'),copyIndex('tmloop',1))]",
+                    "fqdn": "[concat(parameters('trafficManagerProfiles_profile_name'),copyIndex('tmloop',1),'.trafficmanager.cn')]",
+                    "ttl": 300
+                },
+                "monitorConfig": {
+                    "protocol": "HTTP",
+                    "port": 80,
+                    "path": "/"
+                },
+                "endpoints": []
+            },
+            "copy": {
+                "name": "tmloop",
+                "count": "[parameters('tmloop')]"
+            },
+            "dependsOn": []
+        }
+    ]
+}
